@@ -2,4 +2,6 @@
 
 cd src
 dotnet build
+cd ..
+
 
