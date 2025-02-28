@@ -3,7 +3,6 @@
              x:Class="StaleSync.Manager.App"
              xmlns:local="using:StaleSync.Manager"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
         <local:ViewLocator/>
