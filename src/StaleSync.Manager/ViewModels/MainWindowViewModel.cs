@@ -1,6 +1,7 @@
-﻿namespace StaleSync.Manager.ViewModels;
-
-public partial class MainWindowViewModel : ViewModelBase
+﻿namespace StaleSync.Manager.ViewModels
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    public partial class MainWindowViewModel : ViewModelBase
+    {
+        public string Greeting { get; } = "Welcome to Avalonia!";
+    }
 }

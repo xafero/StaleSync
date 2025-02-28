@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace StaleSync.Manager.ViewModels;
-
-public class ViewModelBase : ObservableObject
+namespace StaleSync.Manager.ViewModels
 {
+    public class ViewModelBase : ObservableObject
+    {
+    }
 }

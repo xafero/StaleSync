@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 
-namespace StaleSync.Manager.Views;
-
-public partial class MainWindow : Window
+namespace StaleSync.Manager.Views
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
     }
 }
