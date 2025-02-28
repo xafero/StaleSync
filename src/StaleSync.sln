@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaleSync.Agent", "StaleSyn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaleSync.Manager", "StaleSync.Manager\StaleSync.Manager.csproj", "{80AA2118-928D-4E51-AF8F-90B765112EF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaleSync.Proto", "StaleSync.Proto\StaleSync.Proto.csproj", "{4BE2BDA8-3BE8-41EF-88B3-ECCC307CB52E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{80AA2118-928D-4E51-AF8F-90B765112EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80AA2118-928D-4E51-AF8F-90B765112EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80AA2118-928D-4E51-AF8F-90B765112EF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BE2BDA8-3BE8-41EF-88B3-ECCC307CB52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE2BDA8-3BE8-41EF-88B3-ECCC307CB52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE2BDA8-3BE8-41EF-88B3-ECCC307CB52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE2BDA8-3BE8-41EF-88B3-ECCC307CB52E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

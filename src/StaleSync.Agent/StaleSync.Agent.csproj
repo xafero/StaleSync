@@ -17,4 +17,8 @@
     <EmbeddedResource Include="Resources\logo.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StaleSync.Proto\StaleSync.Proto.csproj" />
+  </ItemGroup>
+
 </Project>
