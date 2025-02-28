@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="StaleSync.Manager.App"
              xmlns:local="using:StaleSync.Manager"
+             xmlns:tools="clr-namespace:StaleSync.Manager.Tools"
              RequestedThemeVariant="Default">
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <tools:ViewLocator/>
     </Application.DataTemplates>
   
     <Application.Styles>

@@ -1,73 +1,48 @@
-/*
- * Created by SharpDevelop.
- * User: Hans
- * Date: 2/28/2025
- * Time: 12:51 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
+using StaleSync.Resources;
 
-namespace AustriaTe
+namespace StaleSync
 {
     public sealed class NotificationIcon
     {
-        private NotifyIcon notifyIcon;
-        private ContextMenu notificationMenu;
-
-        #region Initialize icon and menu
+        internal NotifyIcon Icon;
 
         public NotificationIcon()
         {
-            notifyIcon = new NotifyIcon();
-            notificationMenu = new ContextMenu(InitializeMenu());
+            Icon = new NotifyIcon();
+            var notificationMenu1 = new ContextMenuStrip();
+            notificationMenu1.Items.AddRange(InitializeMenu());
 
-            notifyIcon.DoubleClick += IconDoubleClick;
-            System.ComponentModel.ComponentResourceManager resources =
-                new System.ComponentModel.ComponentResourceManager(typeof(NotificationIcon));
-            notifyIcon.Icon = (Icon)resources.GetObject("$this.Icon");
-            notifyIcon.ContextMenu = notificationMenu;
+            Icon.DoubleClick += IconDoubleClick;
+            Icon.Icon = ResLoader.GetIcon("logo.ico");
+            Icon.ContextMenuStrip = notificationMenu1;
         }
 
-        private MenuItem[] InitializeMenu()
+        private ToolStripItem[] InitializeMenu()
         {
-            MenuItem[] menu = new MenuItem[]
+            ToolStripItem[] menu =
             {
-                new MenuItem("About", menuAboutClick),
-                new MenuItem("Exit", menuExitClick)
+                new ToolStripMenuItem("About", null, MenuAboutClick),
+                new ToolStripMenuItem("Exit", null, MenuExitClick)
             };
             return menu;
         }
 
-        #endregion
-
-        #region Main - Program entry point
-
-        
-
-        #endregion
-
-        #region Event Handlers
-
-        private void menuAboutClick(object sender, EventArgs e)
+        private static void MenuAboutClick(object sender, EventArgs e)
         {
-            MessageBox.Show("About This Application");
+            MessageBox.Show("This is a memory-resident agent.", nameof(StaleSync));
         }
 
-        private void menuExitClick(object sender, EventArgs e)
+        private static void MenuExitClick(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void IconDoubleClick(object sender, EventArgs e)
+        private static void IconDoubleClick(object sender, EventArgs e)
         {
-            MessageBox.Show("The icon was double clicked");
+            var form = new MainForm();
+            form.ShowDialog();
         }
-
-        #endregion
     }
 }

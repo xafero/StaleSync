@@ -8,7 +8,7 @@
         Width="550" Height="450"
         x:Class="StaleSync.Manager.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/logo.ico"
         Title="StaleSync Manager">
 
     <Design.DataContext>

@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using StaleSync.Manager.ViewModels;
 
-namespace StaleSync.Manager
+namespace StaleSync.Manager.Tools
 {
     public class ViewLocator : IDataTemplate
     {

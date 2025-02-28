@@ -1,53 +1,35 @@
-/*
- * Created by SharpDevelop.
- * User: Hans
- * Date: 2/28/2025
- * Time: 5:31 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
 using System;
-using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Forms;
 
-namespace AustriaWin
+// ReSharper disable UseObjectOrCollectionInitializer
+
+namespace StaleSync
 {
-	/// <summary>
-	/// Class with program entry point.
-	/// </summary>
-	internal sealed class Program
-	{
-		/// <summary>
-		/// Program entry point.
-		/// </summary>
-		[STAThread]
-		private static void Main(string[] args)
-		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+    internal sealed class Program
+    {
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            bool isFirstInstance;
-            // Please use a unique name for the mutex to prevent conflicts with other programs
-            using (Mutex mtx = new Mutex(true, "AustriaTe", out isFirstInstance))
+            using (_ = new Mutex(true, nameof(StaleSync),
+                       out var isFirstInstance))
             {
                 if (isFirstInstance)
                 {
-                    NotificationIcon notificationIcon = new NotificationIcon();
-                    notificationIcon.notifyIcon.Visible = true;
+                    var tray = new NotificationIcon();
+                    tray.Icon.Visible = true;
                     Application.Run();
-                    notificationIcon.notifyIcon.Dispose();
+                    tray.Icon.Dispose();
                 }
                 else
                 {
-                    // The application is already running
-                    // TODO: Display message box or change focus to existing application instance
+                    MessageBox.Show("Application is already running!",
+                        "Start", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
-            } // releases the Mutex
-        }	
-	}
+            }
+        }
+    }
 }
