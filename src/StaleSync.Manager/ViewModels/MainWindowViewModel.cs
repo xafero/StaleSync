@@ -1,7 +1,9 @@
-﻿namespace StaleSync.Manager.ViewModels
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace StaleSync.Manager.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting { get; } = "Welcome to Avalonia!";
+        [ObservableProperty] private string _greeting;
     }
 }

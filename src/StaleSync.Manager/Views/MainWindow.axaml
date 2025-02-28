@@ -9,7 +9,8 @@
         x:Class="StaleSync.Manager.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/logo.ico"
-        Title="StaleSync Manager">
+        Title="StaleSync Manager"
+        Loaded="OnLoaded">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
