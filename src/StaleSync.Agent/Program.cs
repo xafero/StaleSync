@@ -8,6 +8,11 @@
  */
 
 using System;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Threading;
+using System.Windows.Forms;
 using System.Windows.Forms;
 
 namespace AustriaWin
@@ -25,8 +30,24 @@ namespace AustriaWin
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainForm());
-		}
-		
+
+            bool isFirstInstance;
+            // Please use a unique name for the mutex to prevent conflicts with other programs
+            using (Mutex mtx = new Mutex(true, "AustriaTe", out isFirstInstance))
+            {
+                if (isFirstInstance)
+                {
+                    NotificationIcon notificationIcon = new NotificationIcon();
+                    notificationIcon.notifyIcon.Visible = true;
+                    Application.Run();
+                    notificationIcon.notifyIcon.Dispose();
+                }
+                else
+                {
+                    // The application is already running
+                    // TODO: Display message box or change focus to existing application instance
+                }
+            } // releases the Mutex
+        }	
 	}
 }
