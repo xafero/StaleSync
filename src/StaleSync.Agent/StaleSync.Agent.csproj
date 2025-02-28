@@ -1,7 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net20;net8.0</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net20;net8.0-windows</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>StaleSync</RootNamespace>
+    <AssemblyName>StaleSyncAgent</AssemblyName>
   </PropertyGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
 
 </Project>
