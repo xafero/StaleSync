@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net20;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net48;net46;net40;net35;net20</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>StaleSync</RootNamespace>
     <AssemblyName>StaleSyncAgent</AssemblyName>
   </PropertyGroup>
@@ -11,11 +12,7 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Remove="Resources\logo.ico" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\logo.ico" />
   </ItemGroup>
