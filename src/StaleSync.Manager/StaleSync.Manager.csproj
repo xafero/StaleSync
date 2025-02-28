@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>StaleSync.Manager</RootNamespace>
     <AssemblyName>StaleSyncMan</AssemblyName>
   </PropertyGroup>
