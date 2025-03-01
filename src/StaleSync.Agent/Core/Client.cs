@@ -30,7 +30,10 @@ namespace StaleSync.Core
         }
 
         public string ClientId { get; }
+        public string ServerId { get; private set; }
         public bool ShouldRun { get; set; }
+
+        public event EventHandler<ConnectedArgs> Connected; 
 
         public void Connect(Config config)
         {
@@ -59,6 +62,12 @@ namespace StaleSync.Core
                     using var writer = new StreamWriter(readStream);
                     var idm = Wrap(Announce(ClientId, CommKind.Client));
                     Write(writer, idm);
+
+                    Read(reader, out var idc);
+                    if (idc.Payload is not Announce ma || TrimOrNull(ma.Id) is not { } key)
+                        continue;
+                    ServerId = key;
+                    OnConnected(ConnKind.Read);
 
                     while (ShouldRun)
                     {
@@ -93,6 +102,12 @@ namespace StaleSync.Core
                     var idm = Wrap(Announce(ClientId, CommKind.Client));
                     Write(writer, idm);
 
+                    Read(reader, out var idc);
+                    if (idc.Payload is not Announce ma || TrimOrNull(ma.Id) is not { } key)
+                        continue;
+                    ServerId = key;
+                    OnConnected(ConnKind.Write);
+
                     while (ShouldRun)
                     {
                         if (TryDequeue(_writeQueue) is { } msg)
@@ -107,6 +122,14 @@ namespace StaleSync.Core
                 }
             }
             _writeQueue.Clear();
+        }
+
+        private void OnConnected(ConnKind kind)
+        {
+            Connected?.Invoke(this, new ConnectedArgs
+            {
+                ServerId = ServerId, Kind = kind
+            });
         }
 
         public void Disconnect()

@@ -23,8 +23,15 @@ namespace StaleSync
             Icon.Icon = ResLoader.GetIcon("logo.ico");
             Icon.ContextMenuStrip = menu;
 
+            App.ShowTip = ShowTip;
             _thread = new Thread(App.Run);
             _thread.Start();
+        }
+
+        private void ShowTip(TipArg tip)
+        {
+            var kind = ToolTipIcon.Info;
+            Icon.ShowBalloonTip(tip.Timeout, tip.Title, tip.Text, kind);
         }
 
         private static ToolStripItem[] InitializeMenu()
