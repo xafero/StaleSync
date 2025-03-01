@@ -2,6 +2,6 @@
     "HostIP": "127.0.0.1",
     "HostRead": 4445,
     "HostWrite": 4446,
-    "Reconnect": 2000,
+    "Reconnect": 1000,
     "Poll": 250
 }
