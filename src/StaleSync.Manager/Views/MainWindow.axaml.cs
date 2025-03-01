@@ -15,7 +15,7 @@ namespace StaleSync.Manager.Views
             InitializeComponent();
         }
 
-        private void OnLoaded(object? sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (DataContext is MainWindowViewModel mvm)
             {
