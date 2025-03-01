@@ -75,6 +75,7 @@ namespace StaleSync.Core
             var serverIP = _config.HostIP;
             var writePort = _config.HostWrite;
             var delay = _config.Reconnect;
+            var poll = _config.Poll;
 
             while (ShouldRun)
             {

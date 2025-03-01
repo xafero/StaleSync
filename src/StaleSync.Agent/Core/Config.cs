@@ -11,5 +11,7 @@ namespace StaleSync.Core
         public int HostWrite { get; set; }
 
         public int Reconnect { get; set; }
+
+        public int Poll { get; set; }
     }
 }
