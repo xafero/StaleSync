@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
@@ -7,14 +5,25 @@ namespace StaleSync.Manager.Core
 {
     public static class Server
     {
-        public static void Start(int port)
+        private static TcpListener _readListener;
+        private static TcpListener _writeListener;
+
+        public static void Start(int writePort, int readPort)
         {
-            using var listener = new TcpListener(IPAddress.Any, port);
+            _readListener = new TcpListener(IPAddress.Any, readPort);
+            _writeListener = new TcpListener(IPAddress.Any, writePort);
 
-            listener.Start();
-            Log.WriteLine("Listening on port " + port + "...");
+            _readListener.Start();
+            _writeListener.Start();
 
-            using var client = listener.AcceptTcpClient();
+            Log.WriteLine($"Listening on ports {readPort} & {writePort}...");
+
+        // TODO
+        
+            /*using var client = listener.AcceptTcpClient();
+            var clientAdr = client.Client.RemoteEndPoint?.ToString();
+            Log.WriteLine($"Client {clientAdr} connected.");
+
             using var stream = client.GetStream();
             using var reader = new StreamReader(stream);
             using var writer = new StreamWriter(stream);
@@ -30,7 +39,7 @@ namespace StaleSync.Manager.Core
                 writer.WriteLine(command);
                 var response = reader.ReadLine();
                 Console.WriteLine(response);
-            }
+            }*/
         }
     }
 }

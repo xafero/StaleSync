@@ -2,6 +2,8 @@ namespace StaleSync.Manager.Core
 {
     public class Config
     {
-        public int ServerPort { get; set; }
+        public int ReadPort { get; set; }
+
+        public int WritePort { get; set; }
     }
 }

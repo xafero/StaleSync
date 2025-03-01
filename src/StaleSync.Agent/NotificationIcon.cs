@@ -23,7 +23,7 @@ namespace StaleSync
             Icon.Icon = ResLoader.GetIcon("logo.ico");
             Icon.ContextMenuStrip = menu;
 
-            _thread = new Thread(Client.Run);
+            _thread = new Thread(App.Run);
             _thread.Start();
         }
 
@@ -44,6 +44,12 @@ namespace StaleSync
 
         private static void MenuExitClick(object sender, EventArgs e)
         {
+            Quit();
+        }
+
+        private static void Quit()
+        {
+            Client.Instance.Disconnect();
             Application.Exit();
         }
 

