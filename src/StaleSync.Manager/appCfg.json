@@ -1,4 +1,5 @@
 {
     "ReadPort": 4445,
-    "WritePort": 4446
+    "WritePort": 4446,
+    "Poll": 250
 }

@@ -79,6 +79,7 @@ namespace StaleSync.Manager.Core
 
                 var session = GetSessionOrCreate(key);
                 session.Set(ConnKind.Read, client, reader, writer);
+                session.Start(_config);
             }
         }
 
@@ -106,6 +107,7 @@ namespace StaleSync.Manager.Core
 
                 var session = GetSessionOrCreate(key);
                 session.Set(ConnKind.Write, client, reader, writer);
+                session.Start(_config);
             }
         }
 
