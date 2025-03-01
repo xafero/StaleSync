@@ -7,7 +7,7 @@ namespace StaleSync.Manager.Core
 {
     public static class Server
     {
-        public static void Start(int port = 4444)
+        public static void Start(int port)
         {
             using var listener = new TcpListener(IPAddress.Any, port);
 

@@ -1,0 +1,5 @@
+{
+    "HostIP": "127.0.0.1",
+    "HostPort": 4444,
+    "Reconnect": 2000
+}

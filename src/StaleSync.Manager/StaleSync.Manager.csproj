@@ -2,7 +2,6 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -34,4 +33,11 @@
   <ItemGroup>
     <ProjectReference Include="..\StaleSync.Proto\StaleSync.Proto.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appCfg.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

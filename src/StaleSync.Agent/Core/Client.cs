@@ -3,17 +3,14 @@ using System.IO;
 using System.Net.Sockets;
 using System;
 using System.Threading;
+using Cfg = StaleSync.Proto.ConfigFile<StaleSync.Core.Config>;
 
 namespace StaleSync.Core
 {
     public static class Client
     {
-        public static void Start()
+        public static void Start(string serverIP, int port, int delay)
         {
-            var serverIP = "192.168.1.100";
-            var port = 4444;
-            var reconnectDelay = 2000;
-
             while (true)
             {
                 try
@@ -45,10 +42,17 @@ namespace StaleSync.Core
                 catch (Exception ex)
                 {
                     Console.WriteLine("Connection lost: " + ex.Message);
-                    Console.WriteLine($"Reconnecting in {reconnectDelay / 1000} seconds...");
-                    Thread.Sleep(reconnectDelay);
+                    Console.WriteLine($"Reconnecting in {delay / 1000} seconds...");
+                    Thread.Sleep(delay);
                 }
             }
+        }
+
+        public static void Run()
+        {
+            Cfg.Load();
+            var cfg = Cfg.Config;
+            Start(cfg.HostIP, cfg.HostPort, cfg.Reconnect);
         }
     }
 }

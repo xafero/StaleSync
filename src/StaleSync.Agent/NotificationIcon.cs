@@ -1,31 +1,39 @@
 using System;
+using System.Threading;
 using System.Windows.Forms;
+using StaleSync.Core;
 using StaleSync.Resources;
+
+// ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
 
 namespace StaleSync
 {
     public sealed class NotificationIcon
     {
+        private readonly Thread _thread;
         internal NotifyIcon Icon;
 
         public NotificationIcon()
         {
             Icon = new NotifyIcon();
-            var notificationMenu1 = new ContextMenuStrip();
-            notificationMenu1.Items.AddRange(InitializeMenu());
+            var menu = new ContextMenuStrip();
+            menu.Items.AddRange(InitializeMenu());
 
             Icon.DoubleClick += IconDoubleClick;
             Icon.Icon = ResLoader.GetIcon("logo.ico");
-            Icon.ContextMenuStrip = notificationMenu1;
+            Icon.ContextMenuStrip = menu;
+
+            _thread = new Thread(Client.Run);
+            _thread.Start();
         }
 
-        private ToolStripItem[] InitializeMenu()
+        private static ToolStripItem[] InitializeMenu()
         {
             ToolStripItem[] menu =
-            {
+            [
                 new ToolStripMenuItem("About", null, MenuAboutClick),
                 new ToolStripMenuItem("Exit", null, MenuExitClick)
-            };
+            ];
             return menu;
         }
 
