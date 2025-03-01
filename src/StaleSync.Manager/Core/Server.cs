@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using static StaleSync.Proto.CollTool;
 
 namespace StaleSync.Manager.Core
 {
@@ -21,9 +23,11 @@ namespace StaleSync.Manager.Core
 
         private Server()
         {
+            ServerId = ToTxt(Guid.NewGuid());
             _sessions = new Dictionary<string, Session>();
         }
 
+        public string ServerId { get; }
         public bool ShouldRun { get; set; }
 
         public void Listen(Config config)

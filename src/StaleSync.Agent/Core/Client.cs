@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using StaleSync.Proto;
 using static StaleSync.Proto.CollTool;
+using System;
 
 // ReSharper disable InconsistentNaming
 
@@ -23,10 +24,12 @@ namespace StaleSync.Core
 
         private Client()
         {
+            ClientId = ToTxt(Guid.NewGuid());
             _readQueue = new Queue<Message>();
             _writeQueue = new Queue<Message>();
         }
 
+        public string ClientId { get; }
         public bool ShouldRun { get; set; }
 
         public void Connect(Config config)

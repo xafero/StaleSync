@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace StaleSync.Proto
@@ -22,6 +23,11 @@ namespace StaleSync.Proto
                 return default;
             var item = queue.Dequeue();
             return item;
+        }
+
+        public static string ToTxt(Guid id)
+        {
+            return id.ToString("N").Substring(0, 16);
         }
     }
 }
