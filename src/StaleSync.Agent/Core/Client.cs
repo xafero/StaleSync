@@ -5,6 +5,7 @@ using System.Threading;
 using StaleSync.Proto;
 using static StaleSync.Proto.CollTool;
 using System;
+using static StaleSync.Proto.Protocol;
 
 // ReSharper disable InconsistentNaming
 
@@ -56,6 +57,10 @@ namespace StaleSync.Core
                     using var readStream = readClient.GetStream();
                     using var reader = new StreamReader(readStream);
 
+                    using var writer = new StreamWriter(readStream);
+                    var idm = Wrap(Announce(ClientId));
+                    Write(writer, idm);
+
                     while (ShouldRun)
                     {
                         if (Read(reader, out var msg))
@@ -84,6 +89,10 @@ namespace StaleSync.Core
                     using var writeClient = new TcpClient(serverIP, writePort);
                     using var writeStream = writeClient.GetStream();
                     using var writer = new StreamWriter(writeStream);
+
+                    using var reader = new StreamReader(writeStream);
+                    var idm = Wrap(Announce(ClientId));
+                    Write(writer, idm);
 
                     while (ShouldRun)
                     {
