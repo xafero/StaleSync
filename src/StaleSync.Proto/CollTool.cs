@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace StaleSync.Proto
@@ -17,7 +16,7 @@ namespace StaleSync.Proto
             return TrimOrNull(line);
         }
 
-        public static T TryDequeue<T>(Queue<T> queue)
+        public static T TryDequeue<T>(EvQueue<T> queue)
         {
             if (queue.Count < 1)
                 return default;

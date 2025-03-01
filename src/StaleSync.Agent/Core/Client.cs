@@ -1,6 +1,5 @@
 using System.IO;
 using System.Net.Sockets;
-using System.Collections.Generic;
 using System.Threading;
 using StaleSync.Proto;
 using static StaleSync.Proto.CollTool;
@@ -17,17 +16,17 @@ namespace StaleSync.Core
 
         private Config _config;
 
-        private readonly Queue<Message> _readQueue;
+        private readonly EvQueue<Message> _readQueue;
         private Thread _readThread;
 
-        private readonly Queue<Message> _writeQueue;
+        private readonly EvQueue<Message> _writeQueue;
         private Thread _writeThread;
 
         private Client()
         {
             ClientId = ToTxt(Guid.NewGuid());
-            _readQueue = new Queue<Message>();
-            _writeQueue = new Queue<Message>();
+            _readQueue = new EvQueue<Message>();
+            _writeQueue = new EvQueue<Message>();
         }
 
         public string ClientId { get; }

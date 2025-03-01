@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using StaleSync.Proto;
@@ -14,16 +13,16 @@ namespace StaleSync.Manager.Core
     {
         private Config _config;
 
-        private readonly Queue<Message> _readQueue;
+        private readonly EvQueue<Message> _readQueue;
         private Thread _readThread;
 
-        private readonly Queue<Message> _writeQueue;
+        private readonly EvQueue<Message> _writeQueue;
         private Thread _writeThread;
 
         public Session()
         {
-            _readQueue = new Queue<Message>();
-            _writeQueue = new Queue<Message>();
+            _readQueue = new EvQueue<Message>();
+            _writeQueue = new EvQueue<Message>();
         }
 
         public bool ShouldRun { get; set; }
