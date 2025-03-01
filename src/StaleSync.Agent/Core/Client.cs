@@ -56,10 +56,10 @@ namespace StaleSync.Core
                     using var readStream = readClient.GetStream();
                     using var reader = new StreamReader(readStream);
 
-                    while (ShouldRun && ReadLineTrim(reader) is { } line)
+                    while (ShouldRun)
                     {
-                        var msg = JsonTool.FromJson<Message>(line);
-                        _readQueue.Enqueue(msg);
+                        if (Read(reader, out var msg))
+                            _readQueue.Enqueue(msg);
                     }
                 }
                 catch (SocketException)
@@ -84,11 +84,12 @@ namespace StaleSync.Core
                     using var writeStream = writeClient.GetStream();
                     using var writer = new StreamWriter(writeStream);
 
-                    while (ShouldRun && TryDequeue(_writeQueue) is { } msg)
+                    while (ShouldRun)
                     {
-                        var json = JsonTool.ToJson(msg);
-                        writer.WriteLine(json);
-                        writer.Flush();
+                        if (TryDequeue(_writeQueue) is { } msg)
+                            if (Write(writer, msg))
+                                continue;
+                        Thread.Sleep(poll);
                     }
                 }
                 catch (SocketException)
@@ -97,6 +98,28 @@ namespace StaleSync.Core
                 }
             }
             _writeQueue.Clear();
+        }
+
+        private static bool Read(StreamReader reader, out Message msg)
+        {
+            if (ReadLineTrim(reader) is { } json)
+            {
+                msg = JsonTool.FromJson<Message>(json);
+                return true;
+            }
+            msg = null;
+            return false;
+        }
+
+        private static bool Write(StreamWriter writer, Message msg)
+        {
+            if (JsonTool.ToJson(msg) is { } json)
+            {
+                writer.WriteLine(json);
+                writer.Flush();
+                return true;
+            }
+            return false;
         }
 
         public void Disconnect()
