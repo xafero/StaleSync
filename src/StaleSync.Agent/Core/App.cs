@@ -1,4 +1,4 @@
-using StaleSync.Proto;
+using Cfg = StaleSync.Proto.ConfigFile<StaleSync.Core.Config>;
 
 namespace StaleSync.Core
 {
@@ -6,8 +6,8 @@ namespace StaleSync.Core
     {
         public static void Run()
         {
-            ConfigFile<Config>.Load();
-            var cfg = ConfigFile<Config>.Config;
+            Cfg.Load();
+            var cfg = Cfg.Config;
 
             var client = Client.Instance;
             client.Connect(cfg);

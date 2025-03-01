@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using StaleSync.Manager.Core;
 using StaleSync.Manager.ViewModels;
-using Cfg = StaleSync.Proto.ConfigFile<StaleSync.Manager.Core.Config>;
+using Appl = StaleSync.Manager.Core.App;
 
 namespace StaleSync.Manager.Views
 {
@@ -25,12 +25,7 @@ namespace StaleSync.Manager.Views
                     mvm.Greeting = oldTxt + Environment.NewLine + txt;
                 });
 
-                Task.Run(() =>
-                {
-                    Cfg.Load();
-                    var cfg = Cfg.Config;
-                    Server.Start(cfg.WritePort, cfg.ReadPort);
-                });
+                Task.Run(Appl.Run);
             }
         }
     }
