@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using static StaleSync.Proto.CollTool;
+using static StaleSync.Proto.Protocol;
 
 namespace StaleSync.Manager.Core
 {
@@ -58,6 +60,14 @@ namespace StaleSync.Manager.Core
                 using var client = _readListener.AcceptTcpClient();
                 var clientAdr = client.Client.RemoteEndPoint?.ToString();
                 Log.WriteLine($"Client {clientAdr} connected read.");
+
+                using var readStream = client.GetStream();
+                using var reader = new StreamReader(readStream);
+                Read(reader, out var idc);
+
+                using var writer = new StreamWriter(readStream);
+                var idm = Wrap(Announce(ServerId));
+                Write(writer, idm);
             }
         }
 
@@ -68,6 +78,14 @@ namespace StaleSync.Manager.Core
                 using var client = _writeListener.AcceptTcpClient();
                 var clientAdr = client.Client.RemoteEndPoint?.ToString();
                 Log.WriteLine($"Client {clientAdr} connected write.");
+
+                using var writeStream = client.GetStream();
+                using var reader = new StreamReader(writeStream);
+                Read(reader, out var idc);
+
+                using var writer = new StreamWriter(writeStream);
+                var idm = Wrap(Announce(ServerId));
+                Write(writer, idm);
             }
         }
     }

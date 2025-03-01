@@ -110,28 +110,6 @@ namespace StaleSync.Core
             _writeQueue.Clear();
         }
 
-        private static bool Read(StreamReader reader, out Message msg)
-        {
-            if (ReadLineTrim(reader) is { } json)
-            {
-                msg = JsonTool.FromJson<Message>(json);
-                return true;
-            }
-            msg = null;
-            return false;
-        }
-
-        private static bool Write(StreamWriter writer, Message msg)
-        {
-            if (JsonTool.ToJson(msg) is { } json)
-            {
-                writer.WriteLine(json);
-                writer.Flush();
-                return true;
-            }
-            return false;
-        }
-
         public void Disconnect()
         {
             ShouldRun = false;

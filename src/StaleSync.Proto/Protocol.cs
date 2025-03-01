@@ -1,4 +1,8 @@
-﻿namespace StaleSync.Proto
+﻿using System.IO;
+using static StaleSync.Proto.CollTool;
+using static StaleSync.Proto.JsonTool;
+
+namespace StaleSync.Proto
 {
     public static class Protocol
     {
@@ -17,6 +21,28 @@
                 Payload = payload
             };
             return msg;
+        }
+
+        public static bool Read(StreamReader reader, out Message msg)
+        {
+            if (ReadLineTrim(reader) is { } json)
+            {
+                msg = FromJson<Message>(json);
+                return true;
+            }
+            msg = null;
+            return false;
+        }
+
+        public static bool Write(StreamWriter writer, Message msg)
+        {
+            if (ToJson(msg) is { } json)
+            {
+                writer.WriteLine(json);
+                writer.Flush();
+                return true;
+            }
+            return false;
         }
     }
 }

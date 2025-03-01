@@ -7,9 +7,10 @@ namespace StaleSync.Proto
     {
         private static JsonSerializerSettings GetConfig() => new()
         {
-            Formatting = Formatting.Indented,
+            Formatting = Formatting.None,
             Converters = { new StringEnumConverter() },
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto
         };
 
         private static readonly JsonSerializerSettings Config = GetConfig();
