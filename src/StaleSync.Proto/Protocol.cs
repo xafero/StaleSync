@@ -6,11 +6,11 @@ namespace StaleSync.Proto
 {
     public static class Protocol
     {
-        public static Announce Announce(string id)
+        public static Announce Announce(string id, CommKind kind)
         {
             return new Announce
             {
-                Id = id
+                Id = id, Kind = kind
             };
         }
 

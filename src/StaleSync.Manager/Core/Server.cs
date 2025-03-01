@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using StaleSync.Proto;
 using static StaleSync.Proto.CollTool;
 using static StaleSync.Proto.Protocol;
 
@@ -21,7 +22,8 @@ namespace StaleSync.Manager.Core
         private Thread _readThread;
         private Thread _writeThread;
 
-        private Dictionary<string, Session> _sessions;
+        private readonly Dictionary<string, Session> _sessions;
+        private readonly object _sessionLock = new();
 
         private Server()
         {
@@ -57,17 +59,26 @@ namespace StaleSync.Manager.Core
         {
             while (ShouldRun)
             {
-                using var client = _readListener.AcceptTcpClient();
+                var client = _readListener.AcceptTcpClient();
                 var clientAdr = client.Client.RemoteEndPoint?.ToString();
                 Log.WriteLine($"Client {clientAdr} connected read.");
 
-                using var readStream = client.GetStream();
-                using var reader = new StreamReader(readStream);
+                var readStream = client.GetStream();
+                var reader = new StreamReader(readStream);
                 Read(reader, out var idc);
 
-                using var writer = new StreamWriter(readStream);
-                var idm = Wrap(Announce(ServerId));
+                if (idc.Payload is not Announce ma || TrimOrNull(ma.Id) is not { } key)
+                {
+                    client.Dispose();
+                    continue;
+                }
+
+                var writer = new StreamWriter(readStream);
+                var idm = Wrap(Announce(ServerId, CommKind.Server));
                 Write(writer, idm);
+
+                var session = GetSessionOrCreate(key);
+                session.Set(ConnKind.Read, client, reader, writer);
             }
         }
 
@@ -75,17 +86,37 @@ namespace StaleSync.Manager.Core
         {
             while (ShouldRun)
             {
-                using var client = _writeListener.AcceptTcpClient();
+                var client = _writeListener.AcceptTcpClient();
                 var clientAdr = client.Client.RemoteEndPoint?.ToString();
                 Log.WriteLine($"Client {clientAdr} connected write.");
 
-                using var writeStream = client.GetStream();
-                using var reader = new StreamReader(writeStream);
+                var writeStream = client.GetStream();
+                var reader = new StreamReader(writeStream);
                 Read(reader, out var idc);
 
-                using var writer = new StreamWriter(writeStream);
-                var idm = Wrap(Announce(ServerId));
+                if (idc.Payload is not Announce ma || TrimOrNull(ma.Id) is not { } key)
+                {
+                    client.Dispose();
+                    continue;
+                }
+
+                var writer = new StreamWriter(writeStream);
+                var idm = Wrap(Announce(ServerId, CommKind.Server));
                 Write(writer, idm);
+
+                var session = GetSessionOrCreate(key);
+                session.Set(ConnKind.Write, client, reader, writer);
+            }
+        }
+
+        private Session GetSessionOrCreate(string key)
+        {
+            lock (_sessionLock)
+            {
+                if (_sessions.TryGetValue(key, out var value))
+                    return value;
+                _sessions.Add(key, value = new Session());
+                return value;
             }
         }
     }

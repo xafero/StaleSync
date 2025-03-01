@@ -58,7 +58,7 @@ namespace StaleSync.Core
                     using var reader = new StreamReader(readStream);
 
                     using var writer = new StreamWriter(readStream);
-                    var idm = Wrap(Announce(ClientId));
+                    var idm = Wrap(Announce(ClientId, CommKind.Client));
                     Write(writer, idm);
 
                     while (ShouldRun)
@@ -91,7 +91,7 @@ namespace StaleSync.Core
                     using var writer = new StreamWriter(writeStream);
 
                     using var reader = new StreamReader(writeStream);
-                    var idm = Wrap(Announce(ClientId));
+                    var idm = Wrap(Announce(ClientId, CommKind.Client));
                     Write(writer, idm);
 
                     while (ShouldRun)

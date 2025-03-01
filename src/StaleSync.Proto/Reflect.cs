@@ -13,4 +13,22 @@ namespace StaleSync.Proto
             return dir;
         }
     }
+
+    public enum CommKind
+    {
+        None = 0,
+
+        Client,
+
+        Server
+    }
+
+    public enum ConnKind
+    {
+        None = 0,
+
+        Read,
+
+        Write
+    }
 }
